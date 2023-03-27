@@ -3,6 +3,7 @@ package ru.job4j.chess;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ru.job4j.chess.firuges.Cell;
+import ru.job4j.chess.firuges.Figure;
 import ru.job4j.chess.firuges.black.BishopBlack;
 
 import static org.assertj.core.api.Assertions.*;
@@ -18,5 +19,18 @@ public class LogicTest {
             logic.move(Cell.C1, Cell.H6);
         });
         assertThat(exception.getMessage()).isEqualTo("Figure not found on the board.");
+    }
+
+    @Test
+    public void whenMoveThenImpossibleMoveException()
+            throws FigureNotFoundException, OccupiedCellException, ImpossibleMoveException {
+        Logic logic = new Logic();
+        Cell start = Cell.C8;
+        Cell dest = Cell.F6;
+        Figure bishopBlack = new BishopBlack(start);
+        ImpossibleMoveException exception = assertThrows(ImpossibleMoveException.class, () -> {
+            logic.move(bishopBlack.position(), dest);
+        });
+        assertThat(exception.getMessage()).isEqualTo("Could not move by diagonal from %s to %s", start, dest);
     }
 }
